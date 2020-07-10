@@ -4,6 +4,8 @@
   "description": "Node.js implementation of Lox from Bob Nystrom's Crafting Interperters.",
   "main": "index.js",
   "scripts": {
+    "clean": "del-cli dist",
+    "prebuild": "npm run clean",
     "build": "tsc"
   },
   "repository": {
@@ -17,8 +19,13 @@
   },
   "homepage": "https://github.com/duxprime/lox-interpreter#readme",
   "dependencies": {
-    "@types/node": "^14.0.20",
     "ts-node": "^8.10.2",
-    "typescript": "^3.9.6"
+    "typescript": "^3.9.6",
+    "yargs": "^15.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "^14.0.20",
+    "@types/yargs": "^15.0.5",
+    "del-cli": "3.0.1"
   }
 }
