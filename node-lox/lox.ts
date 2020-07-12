@@ -1,5 +1,5 @@
 import yargs = require('yargs');
-import { Lox } from './lox/bootstrap';
+import { Lox } from './src/lox';
 
 const args = yargs.options({
     source: {
