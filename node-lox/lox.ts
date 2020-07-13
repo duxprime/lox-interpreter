@@ -13,6 +13,9 @@ const args = yargs.options({
 }).argv;
 
 console.log(args);
-Lox.main(args.source).then(() => {
-    process.exit(0);
-});
+Lox.main(args.source)
+    .then(() => process.exit(0))
+    .catch(e => {
+        console.error(e);
+        process.exit(65)
+    });
