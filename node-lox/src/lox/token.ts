@@ -13,8 +13,8 @@ export enum TokenType {
     STAR = 'Star',
   
     // One or two character tokens.
-    BANG = 'Bang', 
-    BANG_EQUAL = 'Bang Equal',
+    BANG = 'Not', 
+    BANG_EQUAL = 'Not Equal',
     EQUAL = 'Equal', 
     EQUAL_EQUAL = 'Equal Equal',
     GREATER = 'Greater Than', 
@@ -32,7 +32,7 @@ export enum TokenType {
     CLASS = 'Class', 
     ELSE = 'Else', 
     FALSE = 'False', 
-    FUN = 'Fun', 
+    FUN = 'Function', 
     FOR = 'For', 
     IF = 'If', 
     NIL = 'Nil', 
