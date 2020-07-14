@@ -2,9 +2,28 @@ import { Token, TokenType } from './token';
 import { SyntaxError } from './error';
 
 export class Scanner {
+    private static keywordsMap = new Map<string, TokenType>([
+        ['and', TokenType.AND],
+        ['class', TokenType.CLASS],
+        ['else', TokenType.ELSE],
+        ['false', TokenType.FALSE],
+        ['for', TokenType.FOR],
+        ['fun', TokenType.FUN],
+        ['if', TokenType.IF],
+        ['nil', TokenType.NIL],
+        ['or', TokenType.OR],
+        ['print', TokenType.PRINT],
+        ['return', TokenType.RETURN],
+        ['super', TokenType.SUPER],
+        ['this', TokenType.THIS],
+        ['true', TokenType.TRUE],
+        ['var', TokenType.VAR],
+        ['while', TokenType.WHILE]
+    ]);
+    
     public readonly tokens:Token[] = [];
     /**
-     * The position in the current line of the first character in the current lexeme.
+     * The position of the first character in the current lexeme.
      */
     private start = 0;
     /**
@@ -81,9 +100,7 @@ export class Scanner {
                 break;
             case '/':
                 if(this.advanceMatch('/')) {
-                    while(this.peek() !== '\n' && !this.isAtEnd) {
-                        this.advance();
-                    }
+                    this.advanceToEnd();
                 }
                 else {
                     tokenType = TokenType.SLASH;
@@ -103,6 +120,9 @@ export class Scanner {
             default:
                 if(isDigit(char)){
                     this.consumeNumber();
+                }
+                else if(isAlpha(char)){
+                    this.consumeIdentifier();
                 }
                 else {
                     throw new SyntaxError(this.line, 'Unexpected character.');
@@ -156,6 +176,19 @@ export class Scanner {
         return true;
     }
 
+    /**
+     * Advances the scanner to the end of the line.
+     */
+    private advanceToEnd(){
+        while(this.peek() !== '\n' && !this.isAtEnd) {
+            this.advance();
+        }
+    }
+
+    private getLexme(){
+        return this.source.substring(this.start, this.current);
+    }
+
     private consumeString(){
         let peeked;
         while((peeked = this.peek()) !== '"' && !this.isAtEnd){
@@ -174,7 +207,8 @@ export class Scanner {
         // closing quote
         this.advance();
 
-        const val = this.source.substring(this.start + 1, this.current - 1);
+        const lexeme = this.getLexme();
+        const val = lexeme.replace('"', '');
         this.addToken(TokenType.STRING, val);
     }
 
@@ -195,13 +229,27 @@ export class Scanner {
             }
         }
 
-        const val = parseFloat(this.source.substring(this.start, this.current));
+        const val = parseFloat(this.getLexme());
         this.addToken(TokenType.NUMBER, val);
     }
 
+    private consumeIdentifier(){
+        let c = this.peek();
+        while(isAlpha(c) || isDigit(c)){
+            this.advance();
+            c = this.peek();
+        }
+
+        const lexeme = this.getLexme();
+        const type = Scanner.keywordsMap.get(lexeme) ?? TokenType.IDENTIFIER;
+
+
+        this.addToken(type);
+    }
+
     private addToken(type:TokenType, literal:string|number|null = null){
-        const text = this.source.substring(this.start, this.current);
-        const token = new Token(type, text, literal, this.line);
+        const lexeme = this.getLexme();
+        const token = new Token(type, lexeme, literal, this.line);
         this.tokens.push(token);
     }
 }
@@ -211,4 +259,11 @@ function isDigit(char:string){
     return !isNaN(maybeDigit) 
         && maybeDigit >= 0
         && maybeDigit <= 9;
+}
+
+function isAlpha(char:string){
+    return char.length === 1 &&
+        (char >= 'a' && char <= 'z') ||
+        (char >= 'A' && char <= 'Z') ||
+        char === '_';
 }
