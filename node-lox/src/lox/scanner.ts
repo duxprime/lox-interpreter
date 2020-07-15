@@ -126,7 +126,7 @@ export class Scanner {
                     this.consumeIdentifier();
                 }
                 else {
-                    throw new SyntaxError(this.line, 'Unexpected character.');
+                    throw new SyntaxError(this.line, this.column, 'Unexpected character.');
                 }
                 break;                
         }
@@ -208,7 +208,7 @@ export class Scanner {
 
         // unterminated string
         if(this.isAtEnd) {
-            throw new SyntaxError(this.line, 'Unterminated string');
+            throw new SyntaxError(this.line, this.column, 'Unterminated string');
         }
 
         // closing quote
