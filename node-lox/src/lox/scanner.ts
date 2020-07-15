@@ -31,6 +31,7 @@ export class Scanner {
      */
     private current = 0;
     private line = 1;
+    private column = 1;
 
     private get isAtEnd(){
         return this.current >= this.source.length;
@@ -48,7 +49,7 @@ export class Scanner {
             this.scanToken();
         }
 
-        this.tokens.push(new Token(TokenType.EOF, '', null, this.line));
+        this.tokens.push(new Token(TokenType.EOF, this.line));
     }
 
     private scanToken(){
@@ -115,7 +116,7 @@ export class Scanner {
                 // Ignore whitespace.
                 break;    
             case '\n':
-                this.line++;
+                this.advanceLine();
                 break;
             default:
                 if(isDigit(char)){
@@ -155,6 +156,7 @@ export class Scanner {
     private advance(){
         const char = this.peek();
         this.current++;
+        this.column++;
         return char;
     }
 
@@ -183,6 +185,11 @@ export class Scanner {
         while(this.peek() !== '\n' && !this.isAtEnd) {
             this.advance();
         }
+    }
+
+    private advanceLine(){
+        this.line++;
+        this.column = 1;
     }
 
     private getLexme(){
@@ -247,9 +254,9 @@ export class Scanner {
         this.addToken(type);
     }
 
-    private addToken(type:TokenType, literal:string|number|null = null){
+    private addToken(type:TokenType, literal?:string|number){
         const lexeme = this.getLexme();
-        const token = new Token(type, lexeme, literal, this.line);
+        const token = new Token(type, this.line, lexeme, literal);
         this.tokens.push(token);
     }
 }

@@ -51,13 +51,13 @@ export enum TokenType {
 export class Token {
     constructor(
         public readonly type:TokenType,
-        public readonly lexeme:string,
-        public readonly literal:string|number|null,
-        public readonly line:number
+        public readonly line:number,
+        public readonly lexeme?:string,
+        public readonly literal?:string|number
     ){
     }
 
     public toString(){
-        return `${this.type} ${this.lexeme} ${this.literal}`;
+        return `${this.type} ${this.lexeme} ${this.literal || ''}`;
     }
 }
