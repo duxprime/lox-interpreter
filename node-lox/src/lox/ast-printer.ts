@@ -9,7 +9,8 @@ import {
 
 export class AstPrinter implements ExpressionVisitor<string> {
     public print(exp:Expression<string>){
-        return exp.accept(this);
+        const expression = exp.accept(this);
+        console.log(expression);
     }
 
     public visitUnaryExp(exp:UnaryExp){
@@ -29,7 +30,7 @@ export class AstPrinter implements ExpressionVisitor<string> {
             return 'nil';
         }
 
-        return exp.value.toString();
+        return exp.value?.toString() || '';
     }
 
     private parenthesize(name:string, ...expressions:Expression<string>[]){
@@ -43,7 +44,7 @@ export class AstPrinter implements ExpressionVisitor<string> {
             builder.push(exp.accept(this));
         })
 
-        builder.push('(');
+        builder.push(')');
 
         return builder.join('');
     }
