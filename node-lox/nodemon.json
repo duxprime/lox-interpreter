@@ -5,5 +5,7 @@
     ],
     "ext": "ts",
     "ignore": ["src/**/*.spec.ts"],
-    "exec": "ts-node ./lox.ts"      
+    "execMap": {
+        "ts": "node --require ts-node/register"      
+    }
   }

@@ -9,7 +9,7 @@
     "build": "tsc",
     "prestart": "npm run build",
     "start": "node dist/lox",
-    "start:dev": "nodemon"
+    "start:dev": "nodemon --inspect=5858 lox.ts"
   },
   "repository": {
     "type": "git",
