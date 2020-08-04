@@ -64,7 +64,7 @@ export class GroupingExp extends Expression<string> {
 export class LiteralExp extends Expression<string> {
     public type = ExpressionType.Literal;
     constructor(
-        public readonly value?:string|number
+        public readonly value:string|number|boolean|null
     ){
         super();
     }

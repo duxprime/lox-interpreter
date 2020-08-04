@@ -1,5 +1,5 @@
 import { Token, TokenType } from './token';
-import { SyntaxError } from './error';
+import { ScanError } from './error';
 
 export class Scanner {
     private static keywordsMap = new Map<string, TokenType>([
@@ -126,7 +126,7 @@ export class Scanner {
                     this.consumeIdentifier();
                 }
                 else {
-                    throw new SyntaxError(this.line, this.column, 'Unexpected character.');
+                    throw new ScanError(this.line, this.column, 'Unexpected character.');
                 }
                 break;                
         }
@@ -208,7 +208,7 @@ export class Scanner {
 
         // unterminated string
         if(this.isAtEnd) {
-            throw new SyntaxError(this.line, this.column, 'Unterminated string');
+            throw new ScanError(this.line, this.column, 'Unterminated string');
         }
 
         // closing quote

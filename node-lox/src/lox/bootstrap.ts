@@ -1,7 +1,9 @@
 import readline = require('readline');
 import { promises as fs } from 'fs';
 import { Scanner } from './scanner';
-import { SyntaxError } from './error';
+import { ScanError } from './error';
+import { Parser } from './parser';
+import { AstPrinter } from './ast-printer';
 
 const quitChar:string = 'q';
 
@@ -49,18 +51,7 @@ export class Lox {
                     terminal.close();
                     break;
                 default:
-                    try {
-                        Lox.run(line);
-                    }
-                    catch(e) {
-                        if(e instanceof SyntaxError){
-                            console.error(e.toString());
-                        }
-                        else {
-                            throw e;
-                        }
-                    }
-
+                    Lox.run(line);
                     terminal.prompt();
                     break;
             }
@@ -70,9 +61,26 @@ export class Lox {
     }
 
     private static run(source:string){
-        const scanner = new Scanner(source);
-        const tokens = scanner.scanTokens();
+        try {
+            const scanner = new Scanner(source);
+            scanner.scanTokens();
+            scanner.tokens.forEach(t => console.log(t));
 
-        scanner.tokens.forEach(t => console.log(t));
+            const parser = new Parser(scanner.tokens);       
+            const exp = parser.parse();     
+
+            if(exp){
+                const printer = new AstPrinter();
+                printer.print(exp);
+            }
+        }
+        catch(e) {
+            if(e instanceof ScanError){
+                console.error(e.toString());
+            }
+            else {
+                throw e;
+            }
+        }
     }
 }
