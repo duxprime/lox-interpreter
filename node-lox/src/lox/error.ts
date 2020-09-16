@@ -1,4 +1,5 @@
 import { Token, TokenType } from './token';
+import { Expression } from './expression';
 
 export class ScanError {
     constructor(
@@ -32,5 +33,20 @@ export class ParseError {
         else {
             return `${this.token.line} at ${this.token.lexeme} ${this.msg}`;
         }
+    }
+}
+
+/**
+ * Error thrown at runtime by the interpreter.
+ */
+export class RuntimeError {
+    constructor(
+        private operator:Token,
+        private msg:string
+    ){
+    }
+
+    public toString(){
+        return `Runtime error ${this.operator.type} at ${this.operator.line} : ${this.msg}`;
     }
 }

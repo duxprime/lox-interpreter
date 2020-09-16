@@ -1,4 +1,5 @@
 import { Token } from './token';
+import { LiteralValue } from '../common';
 
 export enum ExpressionType {
     BinaryOperator = 'BinaryOperator',
@@ -16,7 +17,7 @@ export interface ExpressionVisitor<R = void> {
 
 export abstract class Expression<R = void> {
     readonly abstract type:ExpressionType
-    public abstract accept(visitor:ExpressionVisitor):R;
+    public abstract accept(visitor:ExpressionVisitor<R>):R;
 }
 
 export class BinaryExp extends Expression<string> {
@@ -64,7 +65,7 @@ export class GroupingExp extends Expression<string> {
 export class LiteralExp extends Expression<string> {
     public type = ExpressionType.Literal;
     constructor(
-        public readonly value:string|number|boolean|null
+        public readonly value:LiteralValue
     ){
         super();
     }
