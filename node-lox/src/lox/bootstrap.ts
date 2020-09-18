@@ -4,10 +4,15 @@ import { Scanner } from './scanner';
 import { ScanError } from './error';
 import { Parser } from './parser';
 import { AstPrinter } from './ast-printer';
+import { Interpreter } from './interpreter';
 
 const quitChar:string = 'q';
 
 export class Lox {
+    private static hadRuntimeError = false;
+    private static hadError = false;
+    private static interpreter = new Interpreter();
+
     public static async main(path?:string){
         if(path){
             return Lox.runFile(path);
@@ -72,6 +77,7 @@ export class Lox {
             if(exp){
                 const printer = new AstPrinter();
                 printer.print(exp);
+                Lox.interpreter.interpret(exp);
             }
         }
         catch(e) {
