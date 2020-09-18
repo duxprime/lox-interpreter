@@ -4,7 +4,9 @@ import {
     GroupingExp,
     BinaryExp,
     UnaryExp,
-    Expression
+    Expression,
+    ExpressionType,
+    StringExp
 } from './expression';
 import { TokenType, Token } from './token';
 import { 
@@ -16,16 +18,23 @@ import {
 } from '../common';
 import { RuntimeError } from './error';
 
-export class Interpreter implements ExpressionVisitor<LiteralValue>{
-    public visitLiteralExp(exp:LiteralExp){
+export class Interpreter extends ExpressionVisitor<LiteralValue>{
+    public interpret(exp:Expression<string>){
+        const value = this.evaluate(exp);
+        console.log(this.stringify(value));
+
+        return value;
+    }
+
+    protected visitLiteralExp(exp:LiteralExp){
         return exp.value;
     }
 
-    public visitGroupingExp(exp:GroupingExp){
+    protected visitGroupingExp(exp:GroupingExp){
         return this.evaluate(exp.expression)
     }
 
-    public visitUnaryExp(exp:UnaryExp){
+    protected visitUnaryExp(exp:UnaryExp){
         const right = this.evaluate(exp.right);
         const { operator } = exp;
 
@@ -43,7 +52,7 @@ export class Interpreter implements ExpressionVisitor<LiteralValue>{
         }
     }
 
-    public visitBinaryExp(exp:BinaryExp){
+    protected visitBinaryExp(exp:BinaryExp){
         const right = this.evaluate(exp.right);
         const left = this.evaluate(exp.left);
         const { operator } = exp;
@@ -98,6 +107,14 @@ export class Interpreter implements ExpressionVisitor<LiteralValue>{
 
     private evaluate(exp:Expression<LiteralValue>):LiteralValue{
         return exp.accept(this);
+    }
+
+    private stringify(obj:Object|null){
+        if(obj === null){
+            return 'nil';
+        }
+
+        return obj.toString();
     }
 }
 

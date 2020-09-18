@@ -1,5 +1,4 @@
 import { Token, TokenType } from './token';
-import { Expression } from './expression';
 
 export class ScanError {
     constructor(

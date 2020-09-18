@@ -7,25 +7,25 @@ import {
     ExpressionVisitor
 } from './expression';
 
-export class AstPrinter implements ExpressionVisitor<string> {
+export class AstPrinter extends ExpressionVisitor<string> {
     public print(exp:Expression<string>){
         const expression = exp.accept(this);
         console.log(expression);
     }
 
-    public visitUnaryExp(exp:UnaryExp){
+    protected visitUnaryExp(exp:UnaryExp){
         return this.parenthesize(exp.operator.lexeme ?? '', exp.right);
     }
 
-    public visitBinaryExp(exp:BinaryExp){
+    protected visitBinaryExp(exp:BinaryExp){
         return this.parenthesize(exp.operator.lexeme ?? '', exp.left, exp.right);
     }
 
-    public visitGroupingExp(exp:GroupingExp){
+    protected visitGroupingExp(exp:GroupingExp){
         return this.parenthesize('group', exp.expression);
     }
 
-    public visitLiteralExp(exp:LiteralExp){
+    protected visitLiteralExp(exp:LiteralExp){
         if(exp.value === undefined){
             return 'nil';
         }
